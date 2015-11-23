@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">MediMgr</string>
+    <string name="app_name">個人用藥管理</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_medi_record">藥物記錄</string>
+    <string name="title_activity_medi_alarms">服藥鬧鐘</string>
+    <string name="title_activity_medi_add">用藥輸入</string>
+    <string name="title_activity_enter_hand">EnterHandActivity</string>
+    <string name="title_activity_enter_push">EnterPushActivity</string>
+    <string name="title_activity_enter_pic">EnterPicActivity</string>
+    <string name="title_activity_enter_qrcode">EnterQRCodeActivity</string>
 
 </resources>

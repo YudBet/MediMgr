@@ -16,6 +16,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".MediRecordActivity"
+            android:label="@string/title_activity_medi_record" >
+        </activity>
+        <activity
+            android:name=".MediAlarmsActivity"
+            android:label="@string/title_activity_medi_alarms" >
+        </activity>
+        <activity
+            android:name=".MediAddActivity"
+            android:label="@string/title_activity_medi_add" >
+        </activity>
+        <activity
+            android:name=".EnterHandActivity"
+            android:label="@string/title_activity_enter_hand" >
+        </activity>
+        <activity
+            android:name=".EnterPushActivity"
+            android:label="@string/title_activity_enter_push" >
+        </activity>
+        <activity
+            android:name=".EnterPicActivity"
+            android:label="@string/title_activity_enter_pic" >
+        </activity>
+        <activity
+            android:name=".EnterQRCodeActivity"
+            android:label="@string/title_activity_enter_qrcode" >
+        </activity>
     </application>
 
 </manifest>
