@@ -7,9 +7,10 @@
     <string name="title_activity_medi_record">藥物記錄</string>
     <string name="title_activity_medi_alarms">服藥鬧鐘</string>
     <string name="title_activity_medi_add">用藥輸入</string>
-    <string name="title_activity_enter_hand">EnterHandActivity</string>
-    <string name="title_activity_enter_push">EnterPushActivity</string>
-    <string name="title_activity_enter_pic">EnterPicActivity</string>
-    <string name="title_activity_enter_qrcode">EnterQRCodeActivity</string>
+    <string name="title_activity_enter_hand">手動輸入</string>
+    <string name="title_activity_enter_push">親友推播</string>
+    <string name="title_activity_enter_pic">照相輸入</string>
+    <string name="title_activity_enter_qrcode">QR Code掃描</string>
+    <string name="title_activity_enter_result">EnterResultActivity</string>
 
 </resources>

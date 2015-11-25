@@ -1,9 +1,14 @@
 package com.example.arashi.medimgr;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -11,10 +16,10 @@ import java.util.ArrayList;
 
 public class MediAlarmsActivity extends ActionBarActivity {
 
-    ArrayList<Alarm> alarmList = new ArrayList<Alarm>();
+    private ArrayList<Alarm> alarmList = new ArrayList<Alarm>();
 
-    ListView alarms;
-    AlarmAdapter adapter;
+    private ListView alarms;
+    private static AlarmAdapter adapter;
 
 
     @Override
@@ -32,8 +37,22 @@ public class MediAlarmsActivity extends ActionBarActivity {
         adapter = new AlarmAdapter(this, alarmList);
 
         alarms.setAdapter(adapter);
+        alarms.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                startAlarmPreferencesActivity(i);
+            }
+        });
     }
 
+    public void startAlarmPreferencesActivity(int alarmPosition) {
+
+    }
+
+
+    public static AlarmAdapter getAdapter() {
+        return adapter;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
