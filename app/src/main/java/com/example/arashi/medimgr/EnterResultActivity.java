@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -28,6 +29,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.InputStream;
+import java.util.List;
 
 
 public class EnterResultActivity extends ActionBarActivity {
@@ -38,16 +40,22 @@ public class EnterResultActivity extends ActionBarActivity {
     private static final String[] PARSE_CLASSES = {
             "drug_dosage", "drug_ingredient", "drug_apprence"};
 
+    private int user_id = 0;
+
     private int init_count = 0;
     private String drug_id,
             ch_name, indications,  // from class drug_dosage
             drug_ingredient,       // from class drug_ingredient
             apprence_url;          // from class drug_apprence
+    public boolean isDuplicated = false;
 
     private ProgressDialog simpleWaitDialog;
 
-    private ImageView medi_img;
+    private TextView duplicated_text;
+    private ImageView duplicated_img;
+
     private TextView medi_name;
+    private ImageView medi_img;
     private EditText medi_count;
     private ToggleButton morning, noon, night, sleep;
     private Button finish;
@@ -160,13 +168,31 @@ public class EnterResultActivity extends ActionBarActivity {
     public void checkDrugInitEnd() {
         if (init_count != PARSE_CLASSES.length) return;
         init_count = 0;
-        initView();
+
+        checkDrugDuplicate("user_id", user_id);
+    }
+
+    public void checkDrugDuplicate(String where, int equalTo) {
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery("user_drug");
+        query.whereEqualTo(where, equalTo).whereEqualTo("drug_ingredient", drug_ingredient);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+                if (e == null) {
+                    isDuplicated = (objects.size() != 0);
+                    initView();
+                } else {
+                    Log.d("user_drug", "Error: " + e.getMessage());
+                }
+            }
+        });
     }
 
 
     public void initView() {
         showMediData();
         showMediSettings();
+        showMediDuplicated();
         showFinishButton();
     }
 
@@ -191,6 +217,17 @@ public class EnterResultActivity extends ActionBarActivity {
         noon.toggle();
         night.toggle();
         sleep.toggle();
+    }
+
+    public void showMediDuplicated() {
+        duplicated_img = (ImageView)findViewById(R.id.duplicated_img);
+        duplicated_text = (TextView)findViewById(R.id.duplicated_text);
+        duplicated_img.setVisibility(View.VISIBLE);
+        duplicated_text.setVisibility(View.VISIBLE);
+        if (isDuplicated) {
+            duplicated_img.setImageResource(R.drawable.cancel_24);
+            duplicated_text.setText("該藥品發生重複用藥情形，\n建議與醫師討論是否用藥。");
+        }
     }
 
     public void showFinishButton() {
@@ -236,7 +273,7 @@ public class EnterResultActivity extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             simpleWaitDialog = ProgressDialog.show(EnterResultActivity.this,
-                    "Wait", "Downloading Image");
+                    "請稍後", "正在下在圖片...");
         }
 
         @Override

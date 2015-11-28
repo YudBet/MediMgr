@@ -63,6 +63,29 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/duplicated_img"
+                android:src="@drawable/ok_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/duplicated_text"
+                android:text="並無重複用藥之情形發生。"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:visibility="invisible"
+                android:textSize="15dp" />
+        </LinearLayout>
     </LinearLayout>
 
     <Button
