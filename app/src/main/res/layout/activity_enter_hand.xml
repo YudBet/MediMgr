@@ -1,12 +1,12 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    tools:context="com.example.arashi.medimgr.EnterHandActivity"
-    android:orientation="vertical">
+    tools:context="com.example.arashi.medimgr.EnterHandActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:padding="@dimen/activity_horizontal_margin"
         android:orientation="vertical">
 
@@ -22,7 +22,7 @@
             android:padding="5dp"
             android:orientation="horizontal">
             <ImageView
-                android:src="@drawable/ic_action_help"
+                android:src="@drawable/help_24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
@@ -55,7 +55,8 @@
             android:numeric="integer"
             android:gravity="center"
             android:layout_gravity="center_horizontal"
-            android:hint="6-digit, etc. 027289" />
+            android:hint="6-digit, etc. 027289"
+            android:textSize="20dp"/>
         <TextView
             android:text="號"
             android:layout_width="wrap_content"
@@ -70,7 +71,7 @@
             android:padding="5dp"
             android:orientation="horizontal">
             <ImageView
-                android:src="@drawable/ic_action_about"
+                android:src="@drawable/error_24"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical" />
@@ -80,8 +81,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginTop="20dp"
-                android:paddingBottom="25dp"
                 android:textSize="15dp" />
         </LinearLayout>>
 
@@ -90,7 +89,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:weightSum="2">
         <Button
@@ -112,4 +111,4 @@
     </LinearLayout>>
 
 
-</LinearLayout>
+</RelativeLayout>

@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,6 +50,7 @@ public class EnterResultActivity extends ActionBarActivity {
     private TextView medi_name;
     private EditText medi_count;
     private ToggleButton morning, noon, night, sleep;
+    private Button finish;
 
 
     @Override
@@ -160,7 +163,14 @@ public class EnterResultActivity extends ActionBarActivity {
         initView();
     }
 
+
     public void initView() {
+        showMediData();
+        showMediSettings();
+        showFinishButton();
+    }
+
+    public void showMediData() {
         medi_name = (TextView)findViewById(R.id.medi_name);
         medi_name.setText(ch_name);
 
@@ -168,7 +178,9 @@ public class EnterResultActivity extends ActionBarActivity {
         if (apprence_url.length() != 0) {
             new ImageDownloader().execute(apprence_url);
         }
+    }
 
+    public void showMediSettings() {
         medi_count = (EditText)findViewById(R.id.medi_count);
 
         morning = (ToggleButton)findViewById(R.id.morning);
@@ -179,9 +191,17 @@ public class EnterResultActivity extends ActionBarActivity {
         noon.toggle();
         night.toggle();
         sleep.toggle();
-        // add listener to toggle buttons
     }
 
+    public void showFinishButton() {
+        finish = (Button)findViewById(R.id.finish);
+        finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
