@@ -29,17 +29,31 @@ public class ParselibAdapter {
     public static final int DRUG_INGREDIENT = 1;
     public static final int DRUG_APPRENCE = 2;
 
+    // class user_drug keys
     private static final String USER_ID_KEY = "user_id";
     private static final String DRUG_ID_KEY = "drug_id";
+    private static final String DRUG_TOTAL_KEY = "drug_total";
+    private static final String DRUG_REMIND_KEY = "drug_remind";
+    private static final String DUPLICATED_KEY = "duplicated";
+    private static final String MORNING_KEY = "morning";
+    private static final String NOON_KEY = "noon";
+    private static final String NIGHT_KEY = "night";
+    private static final String SLEEP_KEY = "sleep";
 
-    private static final String CH_NAME_KEY = "ch_name"; // class drug_dosage keys
+    // class drug_dosage keys
+    private static final String CH_NAME_KEY = "ch_name";
     private static final String INDICATIONS_KEY = "indications";
-    private static final String INGREDIENT_KEY = "drug_ingredient"; // class drug_ingredient key
-    private static final String APPRENCE_URL_KEY = "apprence_url"; // class drug_apprance key
 
-    private String ch_name, indications, // from class drug_dosage
-            drug_ingredient, // from class drug_ingredient
-            apprence_url; // from class drug_apprence
+    // class drug_ingredient key
+    private static final String INGREDIENT_KEY = "drug_ingredient";
+
+    // class drug_apprance key
+    private static final String APPRENCE_URL_KEY = "apprence_url";
+
+
+    private String ch_name, indications,
+            drug_ingredient,
+            apprence_url;
     private boolean isDuplicated;
 
     private String user_id, drug_id;
@@ -142,9 +156,10 @@ public class ParselibAdapter {
     private void onDrugInitTotalEnd() {
         Intent intent = new Intent(context, EnterResultActivity.class);
         intent.putExtra("DRUG_ID", drug_id);
+        intent.putExtra("INGREDIENT", drug_ingredient);
+        intent.putExtra("INDICATIONS", indications);
         intent.putExtra("CH_NAME", ch_name);
         intent.putExtra("APPRENCE_URL", apprence_url);
-        intent.putExtra("INGREDIENT", drug_ingredient);
         intent.putExtra("IS_DUPLICATED", isDuplicated);
         context.startActivity(intent);
 
@@ -153,7 +168,24 @@ public class ParselibAdapter {
 
 
     public void enterUserDrug(UserDrug userDrug) {
+        ParseObject user_drug = new ParseObject(PARSE_USER_DRUG_CLASS);
+        user_drug.put(USER_ID_KEY, user_id);
+        user_drug.put(DRUG_ID_KEY, drug_id);
+        user_drug.put(DRUG_TOTAL_KEY, userDrug.getDrugTotal());
+        user_drug.put(DRUG_REMIND_KEY, userDrug.getDrug_remind());
+        user_drug.put(DUPLICATED_KEY, userDrug.getDuplicated());
 
+        boolean[] time_take = userDrug.getTimeTake();
+        user_drug.put(MORNING_KEY, time_take[0]);
+        user_drug.put(NOON_KEY, time_take[1]);
+        user_drug.put(NIGHT_KEY, time_take[2]);
+        user_drug.put(SLEEP_KEY, time_take[3]);
+
+        user_drug.put(CH_NAME_KEY, userDrug.getChName());
+        user_drug.put(INGREDIENT_KEY, userDrug.getDrugIngredient());
+        user_drug.put(INDICATIONS_KEY, userDrug.getIndications());
+
+        user_drug.saveInBackground();
     }
 
 

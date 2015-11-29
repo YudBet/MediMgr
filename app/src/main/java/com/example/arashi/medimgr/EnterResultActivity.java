@@ -36,9 +36,9 @@ public class EnterResultActivity extends ActionBarActivity {
 
     private static ParselibAdapter parselibAdapter;
 
-    private String drug_id, drug_ingredient, ch_name = "", apprence_url = "";
+    private String drug_id, drug_ingredient, indications, ch_name = "", apprence_url = "";
     private boolean isDuplicated = false;
-    private int drug_total;
+    private int drug_total = 0;
     private boolean[] time_take = new boolean[4]; // [0, 1, 2, 3] -> [morning, noon, night, sleep]
 
     private ProgressDialog simpleWaitDialog;
@@ -71,6 +71,7 @@ public class EnterResultActivity extends ActionBarActivity {
             if (bundle != null) {
                 this.drug_id = bundle.getString("DRUG_ID");
                 this.drug_ingredient = bundle.getString("INGREDIENT");
+                this.indications = bundle.getString("INDICATIONS");
                 this.ch_name = bundle.getString("CH_NAME");
                 this.apprence_url = bundle.getString("APPRENCE_URL");
                 this.isDuplicated = bundle.getBoolean("IS_DUPLICATED");
@@ -78,7 +79,8 @@ public class EnterResultActivity extends ActionBarActivity {
         }
         else {
             this.drug_id = (String)savedInstanceState.getSerializable("DRUG_ID");
-            this.drug_ingredient =(String)savedInstanceState.getSerializable("INGREDIENT");
+            this.drug_ingredient = (String)savedInstanceState.getSerializable("INGREDIENT");
+            this.indications = (String)savedInstanceState.getSerializable("INDICATIONS");
             this.ch_name = (String)savedInstanceState.getSerializable("CH_NAME");
             this.apprence_url = (String)savedInstanceState.getSerializable("APPRENCE_URL");
             this.isDuplicated = (boolean)savedInstanceState.getSerializable("IS_DUPLICATED");
@@ -138,9 +140,11 @@ public class EnterResultActivity extends ActionBarActivity {
                 time_take[2] = night.isChecked();
                 time_take[3] = sleep.isChecked();
 
-                UserDrug userDrug = new UserDrug(drug_id, drug_ingredient);
+                UserDrug userDrug = new UserDrug(drug_id, ch_name, drug_ingredient, indications);
                 userDrug.setDrugTotal(drug_total);
+                userDrug.setDrugRemind(drug_total);
                 userDrug.setTimeTake(time_take);
+                userDrug.setDuplicated(isDuplicated);
 
                 parselibAdapter.enterUserDrug(userDrug);
             }
