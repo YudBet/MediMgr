@@ -34,20 +34,12 @@ import java.util.List;
 
 public class EnterResultActivity extends ActionBarActivity {
 
-    public static final int DRUG_DOSAGE = 0;
-    public static final int DRUG_INGREDIENT = 1;
-    public static final int DRUG_APPRENCE = 2;
-    private static final String[] PARSE_CLASSES = {
-            "drug_dosage", "drug_ingredient", "drug_apprence"};
+    private static ParselibAdapter parselibAdapter;
 
-    private int user_id = 0;
-
-    private int init_count = 0;
-    private String drug_id,
-            ch_name, indications,  // from class drug_dosage
-            drug_ingredient,       // from class drug_ingredient
-            apprence_url;          // from class drug_apprence
-    public boolean isDuplicated = false;
+    private String drug_id, drug_ingredient, ch_name = "", apprence_url = "";
+    private boolean isDuplicated = false;
+    private int drug_total;
+    private boolean[] time_take = new boolean[4]; // [0, 1, 2, 3] -> [morning, noon, night, sleep]
 
     private ProgressDialog simpleWaitDialog;
 
@@ -66,126 +58,31 @@ public class EnterResultActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_result);
 
-        drug_id = getDrugIdFromBundle(savedInstanceState);
-        initDrugInfo();
+        parselibAdapter = MainActivity.getParseAdapter();
+
+        setDrugDataFromBundle(savedInstanceState);
+        initView();
     }
 
-    public String getDrugIdFromBundle(Bundle savedInstanceState) {
-        String drug_id;
-        String from = "";
-        String num = "";
 
+    public void setDrugDataFromBundle(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
-                from = bundle.getString("FROM");
-                num = bundle.getString("NUM");
+                this.drug_id = bundle.getString("DRUG_ID");
+                this.drug_ingredient = bundle.getString("INGREDIENT");
+                this.ch_name = bundle.getString("CH_NAME");
+                this.apprence_url = bundle.getString("APPRENCE_URL");
+                this.isDuplicated = bundle.getBoolean("IS_DUPLICATED");
             }
         }
         else {
-            from = (String)savedInstanceState.getSerializable("FROM");
-            num = (String)savedInstanceState.getSerializable("NUM");
+            this.drug_id = (String)savedInstanceState.getSerializable("DRUG_ID");
+            this.drug_ingredient =(String)savedInstanceState.getSerializable("INGREDIENT");
+            this.ch_name = (String)savedInstanceState.getSerializable("CH_NAME");
+            this.apprence_url = (String)savedInstanceState.getSerializable("APPRENCE_URL");
+            this.isDuplicated = (boolean)savedInstanceState.getSerializable("IS_DUPLICATED");
         }
-
-        drug_id = from + "字第" + num + "號";
-        return drug_id;
-    }
-
-
-    public void initDrugInfo() {
-        initDrugDosage("drug_id", drug_id); // init ch_name, drug_dosage, indications
-        initDrugIngredient("drug_id", drug_id); // init drug_ingredient
-        initDrugApprence("drug_id", drug_id); // init color, shape, apprence_url
-    }
-
-    public void initDrugDosage(String where, String equalTo) {
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_CLASSES[DRUG_DOSAGE]);
-        query.whereEqualTo(where, equalTo);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    setDrugDosage(
-                            object.getString("ch_name"),
-                            object.getString("indications")
-                    );
-                } else {
-                    Log.d("drug_dosage", "Error: " + e.getMessage());
-                }
-            }
-        });
-    }
-
-    public void initDrugIngredient(String where, String equalTo) {
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_CLASSES[DRUG_INGREDIENT]);
-        query.whereEqualTo(where, equalTo);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    setDrugIngredient(object.getString("drug_ingredient"));
-                } else {
-                    Log.d("drug_ingredient", "Error: " + e.getMessage());
-                }
-            }
-        });
-    }
-
-    public void initDrugApprence(String where, String equalTo) {
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_CLASSES[DRUG_APPRENCE]);
-        query.whereEqualTo(where, equalTo);
-        query.getFirstInBackground(new GetCallback<ParseObject>() {
-            @Override
-            public void done(ParseObject object, ParseException e) {
-                if (e == null) {
-                    setDrugApprence(apprence_url = object.getString("apprence_url"));
-                } else {
-                    Log.d("drug_apprence", "Error: " + e.getMessage());
-                }
-            }
-        });
-    }
-
-    public void setDrugDosage(String ch_name, String indications) {
-        this.ch_name = ch_name;
-        this.indications = indications;
-        init_count++;
-        checkDrugInitEnd();
-    }
-
-    public void setDrugIngredient(String drug_ingredient) {
-        this.drug_ingredient = drug_ingredient;
-        init_count++;
-        checkDrugInitEnd();
-    }
-
-    public void setDrugApprence(String apprence_url) {
-        this.apprence_url = apprence_url;
-        init_count++;
-        checkDrugInitEnd();
-    }
-
-    public void checkDrugInitEnd() {
-        if (init_count != PARSE_CLASSES.length) return;
-        init_count = 0;
-
-        checkDrugDuplicate("user_id", user_id);
-    }
-
-    public void checkDrugDuplicate(String where, int equalTo) {
-        final ParseQuery<ParseObject> query = ParseQuery.getQuery("user_drug");
-        query.whereEqualTo(where, equalTo).whereEqualTo("drug_ingredient", drug_ingredient);
-        query.findInBackground(new FindCallback<ParseObject>() {
-            @Override
-            public void done(List<ParseObject> objects, ParseException e) {
-                if (e == null) {
-                    isDuplicated = (objects.size() != 0);
-                    initView();
-                } else {
-                    Log.d("user_drug", "Error: " + e.getMessage());
-                }
-            }
-        });
     }
 
 
@@ -235,10 +132,21 @@ public class EnterResultActivity extends ActionBarActivity {
         finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                drug_total = Integer.parseInt(medi_count.getText().toString());
+                time_take[0] = morning.isChecked();
+                time_take[1] = noon.isChecked();
+                time_take[2] = night.isChecked();
+                time_take[3] = sleep.isChecked();
 
+                UserDrug userDrug = new UserDrug(drug_id, drug_ingredient);
+                userDrug.setDrugTotal(drug_total);
+                userDrug.setTimeTake(time_take);
+
+                parselibAdapter.enterUserDrug(userDrug);
             }
         });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -273,7 +181,7 @@ public class EnterResultActivity extends ActionBarActivity {
         @Override
         protected void onPreExecute() {
             simpleWaitDialog = ProgressDialog.show(EnterResultActivity.this,
-                    "請稍後", "正在下在圖片...");
+                    "請稍後", "正在下載圖片...");
         }
 
         @Override

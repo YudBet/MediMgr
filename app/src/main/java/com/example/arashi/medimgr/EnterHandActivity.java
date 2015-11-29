@@ -90,12 +90,11 @@ public class EnterHandActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 currentNum = number.getText().toString();
+                String drug_id = currentFrom + "字第" + currentNum + "號";
 
-                Intent intent = new Intent(EnterHandActivity.this, EnterResultActivity.class);
-                intent.putExtra("FROM", currentFrom);
-                intent.putExtra("NUM", currentNum);
-                startActivity(intent);
-                finish();
+                ParselibAdapter parselibAdapter = MainActivity.getParseAdapter();
+                parselibAdapter.setContext(EnterHandActivity.this);
+                parselibAdapter.initDrugInfo(drug_id);
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.example.arashi.medimgr;
 
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import com.parse.Parse;
 
 public class MainActivity extends ActionBarActivity {
 
+    private static ParselibAdapter parseAdapter;
+
     private android.support.design.widget.TabLayout mediTabs;
     private TabLayout.Tab mediRecord, mediAlarms, mediAdd;
     // Clock control!
@@ -21,7 +24,9 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Parse.initialize(this, "uuWSfxnVrzL4DttA75rN4u4NOSscf2qygvF3tLvB", "QwcvUtm9ByTWTb4JuIZ0NsUQrVLn3p0nQNFRGztT");
+        String android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        parseAdapter = new ParselibAdapter(android_id);
+        parseAdapter.initialize(this);
 
         initMediTabs();
     }
@@ -75,6 +80,10 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+
+    public static ParselibAdapter getParseAdapter() {
+        return parseAdapter;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
