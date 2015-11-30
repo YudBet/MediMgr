@@ -3,9 +3,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@android:color/white"
     tools:context=".MainActivity">
+
+    <LinearLayout
+        android:id="@+id/time_take"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:weightSum="4"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/morning"
+            android:drawableTop="@drawable/morning"
+            android:text="早餐用藥"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/noon"
+            android:drawableTop="@drawable/noon"
+            android:text="午餐用藥"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/night"
+            android:drawableTop="@drawable/night"
+            android:text="晚餐用藥"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/sleep"
+            android:drawableTop="@drawable/sleep"
+            android:text="睡前用藥"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button"
+            android:layout_weight="1" />
+    </LinearLayout>
 
     <AnalogClock
         android:id="@+id/clock"
@@ -13,8 +53,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/time_take"
         android:paddingTop="50dp" />
+
+
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
