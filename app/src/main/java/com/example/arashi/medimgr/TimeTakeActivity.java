@@ -4,10 +4,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -16,10 +14,13 @@ public class TimeTakeActivity extends ActionBarActivity {
 
     private ParselibAdapter parselibAdapter;
 
-    private ArrayList<String> ch_name_list, indications_list, drug_ingredient_list, apprence_url_list;
+    private ArrayList<UserDrug> userDrugs = new ArrayList<UserDrug>();
+    private ArrayList<String> ch_name_list, indications_list, drug_ingredient_list;
+    private ArrayList<String> apprence_url_list;
     private ArrayList<Integer> drug_total_list, drug_remind_list, is_duplicated_list;
 
-    private TextView text;
+    private ExpandableListView lvExp;
+    private UserDrugsAdapter userDrugsAdapter;
 
 
     @Override
@@ -30,13 +31,11 @@ public class TimeTakeActivity extends ActionBarActivity {
         parselibAdapter = MainActivity.getParseAdapter();
 
         setUserDrugFromBundle(savedInstanceState);
+        initUserDrugs();
 
-        text = (TextView)findViewById(R.id.text);
-        String msg = "";
-        for (String ch_name : ch_name_list) {
-            msg += ch_name + " | ";
-        }
-        text.setText(msg);
+        lvExp = (ExpandableListView)findViewById(R.id.lvExp);
+        userDrugsAdapter = new UserDrugsAdapter(this, userDrugs, apprence_url_list);
+        lvExp.setAdapter(userDrugsAdapter);
     }
 
     public void setUserDrugFromBundle(Bundle savedInstanceState) {
@@ -60,6 +59,23 @@ public class TimeTakeActivity extends ActionBarActivity {
             this.drug_total_list = (ArrayList<Integer>)savedInstanceState.getSerializable(ParselibAdapter.DRUG_TOTAL_KEY);
             this.drug_remind_list = (ArrayList<Integer>)savedInstanceState.getSerializable(ParselibAdapter.DRUG_REMIND_KEY);
             this.is_duplicated_list = (ArrayList<Integer>)savedInstanceState.getSerializable(ParselibAdapter.DUPLICATED_KEY);
+        }
+    }
+
+    public void initUserDrugs() {
+        UserDrug userDrug;
+
+        int len = ch_name_list.size();
+        for (int i = 0; i < len; i++) {
+            userDrug = new UserDrug();
+            userDrug.setChName(ch_name_list.get(i));
+            userDrug.setIndications(indications_list.get(i));
+            userDrug.setDrugIngredient(drug_ingredient_list.get(i));
+            userDrug.setDrugTotal(drug_total_list.get(i));
+            userDrug.setDrugRemind(drug_remind_list.get(i));
+            userDrug.setDuplicated(is_duplicated_list.get(i) == 1);
+
+            userDrugs.add(userDrug);
         }
     }
 

@@ -19,6 +19,8 @@ public class UserDrug {
     private boolean duplicated;
 
 
+    public UserDrug() {}
+
     public UserDrug(String drug_id, String ch_name, String drug_ingredient, String indications) {
         setDrugID(drug_id);
         setChName(ch_name);
