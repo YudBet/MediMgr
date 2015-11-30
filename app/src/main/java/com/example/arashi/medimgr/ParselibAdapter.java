@@ -12,6 +12,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,8 +20,8 @@ import java.util.List;
  */
 public class ParselibAdapter {
 
-    public static final String APPLICATION_ID = "uuWSfxnVrzL4DttA75rN4u4NOSscf2qygvF3tLvB";
-    public static final String CLIENT_ID = "QwcvUtm9ByTWTb4JuIZ0NsUQrVLn3p0nQNFRGztT";
+    private static final String APPLICATION_ID = "uuWSfxnVrzL4DttA75rN4u4NOSscf2qygvF3tLvB";
+    private static final String CLIENT_ID = "QwcvUtm9ByTWTb4JuIZ0NsUQrVLn3p0nQNFRGztT";
 
     public static final String PARSE_USER_DRUG_CLASS = "user_drug";
     public static final String[] PARSE_CLASSES = {
@@ -30,25 +31,22 @@ public class ParselibAdapter {
     public static final int DRUG_APPRENCE = 2;
 
     // class user_drug keys
-    private static final String USER_ID_KEY = "user_id";
-    private static final String DRUG_ID_KEY = "drug_id";
-    private static final String DRUG_TOTAL_KEY = "drug_total";
-    private static final String DRUG_REMIND_KEY = "drug_remind";
-    private static final String DUPLICATED_KEY = "duplicated";
-    private static final String MORNING_KEY = "morning";
-    private static final String NOON_KEY = "noon";
-    private static final String NIGHT_KEY = "night";
-    private static final String SLEEP_KEY = "sleep";
+    public static final String USER_ID_KEY = "user_id";
+    public static final String DRUG_ID_KEY = "drug_id";
+    public static final String DRUG_TOTAL_KEY = "drug_total";
+    public static final String DRUG_REMIND_KEY = "drug_remind";
+    public static final String DUPLICATED_KEY = "duplicated";
+    public static final String[] TIME_TAKE_KEYS = {"morning", "noon", "night", "sleep"};
 
     // class drug_dosage keys
-    private static final String CH_NAME_KEY = "ch_name";
-    private static final String INDICATIONS_KEY = "indications";
+    public static final String CH_NAME_KEY = "ch_name";
+    public static final String INDICATIONS_KEY = "indications";
 
     // class drug_ingredient key
-    private static final String INGREDIENT_KEY = "drug_ingredient";
+    public static final String INGREDIENT_KEY = "drug_ingredient";
 
     // class drug_apprance key
-    private static final String APPRENCE_URL_KEY = "apprence_url";
+    public static final String APPRENCE_URL_KEY = "apprence_url";
 
 
     private String ch_name, indications,
@@ -103,7 +101,7 @@ public class ParselibAdapter {
             @Override
             public void done(ParseObject object, ParseException e) {
                 if (e == null) {
-                    drug_ingredient =  object.getString(INGREDIENT_KEY);
+                    drug_ingredient = object.getString(INGREDIENT_KEY);
                     waitDrugInitEndThenCheckDuplicate();
                 } else {
                     Log.d("drug_ingredient", "Error: " + e.getMessage());
@@ -155,15 +153,67 @@ public class ParselibAdapter {
 
     private void onDrugInitTotalEnd() {
         Intent intent = new Intent(context, EnterResultActivity.class);
-        intent.putExtra("DRUG_ID", drug_id);
-        intent.putExtra("INGREDIENT", drug_ingredient);
-        intent.putExtra("INDICATIONS", indications);
-        intent.putExtra("CH_NAME", ch_name);
-        intent.putExtra("APPRENCE_URL", apprence_url);
-        intent.putExtra("IS_DUPLICATED", isDuplicated);
+        intent.putExtra(DRUG_ID_KEY, drug_id);
+        intent.putExtra(INGREDIENT_KEY, drug_ingredient);
+        intent.putExtra(INDICATIONS_KEY, indications);
+        intent.putExtra(CH_NAME_KEY, ch_name);
+        intent.putExtra(APPRENCE_URL_KEY, apprence_url);
+        intent.putExtra(DUPLICATED_KEY, isDuplicated);
         context.startActivity(intent);
 
         ((EnterHandActivity)context).finish();
+    }
+
+
+    private ArrayList<String> ch_name_list, indications_list, drug_ingredient_list, apprence_url_list;
+    private ArrayList<Integer> drug_total_list, drug_remind_list, is_duplicated_list;
+
+    public void initUserDrug(int time_take) {
+        ch_name_list = new ArrayList<String>();
+        indications_list = new ArrayList<String>();
+        drug_ingredient_list = new ArrayList<String>();
+        apprence_url_list = new ArrayList<String>();
+        drug_total_list = new ArrayList<Integer>();
+        drug_remind_list = new ArrayList<Integer>();
+        is_duplicated_list = new ArrayList<Integer>();
+
+        initUserDrug(USER_ID_KEY, user_id, TIME_TAKE_KEYS[time_take]);
+    }
+
+    private void initUserDrug(String where, String equalTo, String time_take_key) {
+        final ParseQuery<ParseObject> query = ParseQuery.getQuery(PARSE_USER_DRUG_CLASS);
+        query.whereEqualTo(where, equalTo).whereEqualTo(time_take_key, true);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            @Override
+            public void done(List<ParseObject> objects, ParseException e) {
+
+                for (ParseObject obj : objects) {
+                    ch_name_list.add(obj.getString(CH_NAME_KEY));
+                    indications_list.add(obj.getString(INDICATIONS_KEY));
+                    drug_ingredient_list.add(obj.getString(INGREDIENT_KEY));
+                    apprence_url_list.add(obj.getString(APPRENCE_URL_KEY));
+                    drug_total_list.add(obj.getInt(DRUG_TOTAL_KEY));
+                    drug_remind_list.add(obj.getInt(DRUG_REMIND_KEY));
+                    is_duplicated_list.add(obj.getBoolean(DUPLICATED_KEY) ? 1 : 0);
+                }
+
+                onUserDrugInitTotalEnd();
+            }
+        });
+    }
+
+    private void onUserDrugInitTotalEnd() {
+        Intent intent = new Intent(context, TimeTakeActivity.class);
+
+        intent.putStringArrayListExtra(CH_NAME_KEY, ch_name_list);
+        intent.putStringArrayListExtra(INDICATIONS_KEY, indications_list);
+        intent.putStringArrayListExtra(INGREDIENT_KEY, drug_ingredient_list);
+        intent.putStringArrayListExtra(APPRENCE_URL_KEY, apprence_url_list);
+        intent.putIntegerArrayListExtra(DRUG_TOTAL_KEY, drug_total_list);
+        intent.putIntegerArrayListExtra(DRUG_REMIND_KEY, drug_remind_list);
+        intent.putIntegerArrayListExtra(DUPLICATED_KEY, is_duplicated_list);
+
+        context.startActivity(intent);
     }
 
 
@@ -176,10 +226,10 @@ public class ParselibAdapter {
         user_drug.put(DUPLICATED_KEY, userDrug.getDuplicated());
 
         boolean[] time_take = userDrug.getTimeTake();
-        user_drug.put(MORNING_KEY, time_take[0]);
-        user_drug.put(NOON_KEY, time_take[1]);
-        user_drug.put(NIGHT_KEY, time_take[2]);
-        user_drug.put(SLEEP_KEY, time_take[3]);
+        user_drug.put(TIME_TAKE_KEYS[UserDrug.MORNING_TAKE], time_take[UserDrug.MORNING_TAKE]);
+        user_drug.put(TIME_TAKE_KEYS[UserDrug.NOON_TAKE], time_take[UserDrug.NOON_TAKE]);
+        user_drug.put(TIME_TAKE_KEYS[UserDrug.NIGHT_TAKE], time_take[UserDrug.NIGHT_TAKE]);
+        user_drug.put(TIME_TAKE_KEYS[UserDrug.SLEEP_TAKE], time_take[UserDrug.SLEEP_TAKE]);
 
         user_drug.put(CH_NAME_KEY, userDrug.getChName());
         user_drug.put(INGREDIENT_KEY, userDrug.getDrugIngredient());

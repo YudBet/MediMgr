@@ -7,17 +7,21 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.parse.Parse;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
-    private static ParselibAdapter parseAdapter;
+    private static ParselibAdapter parselibAdapter;
+
+    private Button morning, noon, night, sleep;
 
     private android.support.design.widget.TabLayout mediTabs;
     private TabLayout.Tab mediRecord, mediAlarms, mediAdd;
-    // Clock control!
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +29,23 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         String android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        parseAdapter = new ParselibAdapter(android_id);
-        parseAdapter.initialize(this);
+        parselibAdapter = new ParselibAdapter(android_id);
+        parselibAdapter.initialize(this);
 
+        initTimeTakeButtons();
         initMediTabs();
+    }
+
+    public void initTimeTakeButtons() {
+        morning = (Button)findViewById(R.id.morning);
+        noon = (Button)findViewById(R.id.noon);
+        night = (Button)findViewById(R.id.night);
+        sleep = (Button)findViewById(R.id.sleep);
+
+        morning.setOnClickListener(this);
+        noon.setOnClickListener(this);
+        night.setOnClickListener(this);
+        sleep.setOnClickListener(this);
     }
 
     public void initMediTabs() {
@@ -82,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
 
 
     public static ParselibAdapter getParseAdapter() {
-        return parseAdapter;
+        return parselibAdapter;
     }
 
     @Override
@@ -105,5 +122,30 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int time_take = UserDrug.MORNING_TAKE;
+
+        int id = v.getId();
+        switch (id) {
+            case R.id.morning:
+                time_take = UserDrug.MORNING_TAKE;
+                break;
+            case R.id.noon:
+                time_take = UserDrug.NOON_TAKE;
+                break;
+            case R.id.night:
+                time_take = UserDrug.NIGHT_TAKE;
+                break;
+            case R.id.sleep:
+                time_take = UserDrug.SLEEP_TAKE;
+                break;
+            default: break;
+        }
+
+        parselibAdapter.setContext(MainActivity.this);
+        parselibAdapter.initUserDrug(time_take);
     }
 }

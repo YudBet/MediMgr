@@ -51,6 +51,10 @@
             android:name=".EnterResultActivity"
             android:label="@string/title_activity_enter_result" >
         </activity>
+        <activity
+            android:name=".TimeTakeActivity"
+            android:label="@string/title_activity_time_take" >
+        </activity>
     </application>
 
 </manifest>

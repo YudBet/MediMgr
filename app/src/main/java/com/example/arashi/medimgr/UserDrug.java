@@ -5,6 +5,11 @@ package com.example.arashi.medimgr;
  */
 public class UserDrug {
 
+    public static final int MORNING_TAKE = 0;
+    public static final int NOON_TAKE = 1;
+    public static final int NIGHT_TAKE = 2;
+    public static final int SLEEP_TAKE = 3;
+
     private String drug_id;
     private String ch_name;
     private String drug_ingredient;
@@ -12,6 +17,7 @@ public class UserDrug {
     private int drug_total, drug_remind;
     private boolean morning_take, noon_take, night_take, sleep_take;
     private boolean duplicated;
+
 
     public UserDrug(String drug_id, String ch_name, String drug_ingredient, String indications) {
         setDrugID(drug_id);

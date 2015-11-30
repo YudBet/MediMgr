@@ -12,5 +12,6 @@
     <string name="title_activity_enter_pic">照相輸入</string>
     <string name="title_activity_enter_qrcode">QR Code掃描</string>
     <string name="title_activity_enter_result">EnterResultActivity</string>
+    <string name="title_activity_time_take">TimeTakeActivity</string>
 
 </resources>

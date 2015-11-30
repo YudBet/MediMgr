@@ -69,21 +69,21 @@ public class EnterResultActivity extends ActionBarActivity {
         if (savedInstanceState == null) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
-                this.drug_id = bundle.getString("DRUG_ID");
-                this.drug_ingredient = bundle.getString("INGREDIENT");
-                this.indications = bundle.getString("INDICATIONS");
-                this.ch_name = bundle.getString("CH_NAME");
-                this.apprence_url = bundle.getString("APPRENCE_URL");
-                this.isDuplicated = bundle.getBoolean("IS_DUPLICATED");
+                this.drug_id = bundle.getString(ParselibAdapter.DRUG_ID_KEY);
+                this.drug_ingredient = bundle.getString(ParselibAdapter.INGREDIENT_KEY);
+                this.indications = bundle.getString(ParselibAdapter.INDICATIONS_KEY);
+                this.ch_name = bundle.getString(ParselibAdapter.CH_NAME_KEY);
+                this.apprence_url = bundle.getString(ParselibAdapter.APPRENCE_URL_KEY);
+                this.isDuplicated = bundle.getBoolean(ParselibAdapter.DUPLICATED_KEY);
             }
         }
         else {
-            this.drug_id = (String)savedInstanceState.getSerializable("DRUG_ID");
-            this.drug_ingredient = (String)savedInstanceState.getSerializable("INGREDIENT");
-            this.indications = (String)savedInstanceState.getSerializable("INDICATIONS");
-            this.ch_name = (String)savedInstanceState.getSerializable("CH_NAME");
-            this.apprence_url = (String)savedInstanceState.getSerializable("APPRENCE_URL");
-            this.isDuplicated = (boolean)savedInstanceState.getSerializable("IS_DUPLICATED");
+            this.drug_id = (String)savedInstanceState.getSerializable(ParselibAdapter.DRUG_ID_KEY);
+            this.drug_ingredient = (String)savedInstanceState.getSerializable(ParselibAdapter.INGREDIENT_KEY);
+            this.indications = (String)savedInstanceState.getSerializable(ParselibAdapter.INDICATIONS_KEY);
+            this.ch_name = (String)savedInstanceState.getSerializable(ParselibAdapter.CH_NAME_KEY);
+            this.apprence_url = (String)savedInstanceState.getSerializable(ParselibAdapter.APPRENCE_URL_KEY);
+            this.isDuplicated = (boolean)savedInstanceState.getSerializable(ParselibAdapter.DUPLICATED_KEY);
         }
     }
 
@@ -135,10 +135,10 @@ public class EnterResultActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 drug_total = Integer.parseInt(medi_count.getText().toString());
-                time_take[0] = morning.isChecked();
-                time_take[1] = noon.isChecked();
-                time_take[2] = night.isChecked();
-                time_take[3] = sleep.isChecked();
+                time_take[UserDrug.MORNING_TAKE] = morning.isChecked();
+                time_take[UserDrug.NOON_TAKE] = noon.isChecked();
+                time_take[UserDrug.NIGHT_TAKE] = night.isChecked();
+                time_take[UserDrug.SLEEP_TAKE] = sleep.isChecked();
 
                 UserDrug userDrug = new UserDrug(drug_id, ch_name, drug_ingredient, indications);
                 userDrug.setDrugTotal(drug_total);
@@ -147,6 +147,7 @@ public class EnterResultActivity extends ActionBarActivity {
                 userDrug.setDuplicated(isDuplicated);
 
                 parselibAdapter.enterUserDrug(userDrug);
+                finish();
             }
         });
     }
