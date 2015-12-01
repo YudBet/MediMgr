@@ -189,9 +189,9 @@ public class ParselibAdapter {
 
                 for (ParseObject obj : objects) {
                     ch_name_list.add(obj.getString(CH_NAME_KEY));
-                    indications_list.add(obj.getString(INDICATIONS_KEY));
-                    drug_ingredient_list.add(obj.getString(INGREDIENT_KEY));
-                    apprence_url_list.add(obj.getString(APPRENCE_URL_KEY));
+                    indications_list.add(obj.getString(INDICATIONS_KEY) + "");
+                    drug_ingredient_list.add(obj.getString(INGREDIENT_KEY) + "");
+                    apprence_url_list.add(obj.getString(APPRENCE_URL_KEY) + "");
                     drug_total_list.add(obj.getInt(DRUG_TOTAL_KEY));
                     drug_remind_list.add(obj.getInt(DRUG_REMIND_KEY));
                     is_duplicated_list.add(obj.getBoolean(DUPLICATED_KEY) ? 1 : 0);

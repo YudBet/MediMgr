@@ -18,6 +18,7 @@
             android:textSize="25dp" />
         <ImageView
             android:id="@+id/medi_img"
+            android:src="@drawable/drug_default"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal" />
