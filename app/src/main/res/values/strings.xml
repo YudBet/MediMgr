@@ -14,4 +14,5 @@
     <string name="title_activity_enter_result">EnterResultActivity</string>
     <string name="title_activity_time_take">TimeTakeActivity</string>
 
+    <string name="pic_chooser_prompt">請選擇</string>
 </resources>

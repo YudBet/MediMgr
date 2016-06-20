@@ -218,6 +218,8 @@ public class ParselibAdapter {
 
 
     public void enterUserDrug(UserDrug userDrug) {
+        if (drug_id == null) drug_id = "";
+
         ParseObject user_drug = new ParseObject(PARSE_USER_DRUG_CLASS);
         user_drug.put(USER_ID_KEY, user_id);
         user_drug.put(DRUG_ID_KEY, drug_id);

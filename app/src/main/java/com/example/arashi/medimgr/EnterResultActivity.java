@@ -3,6 +3,7 @@ package com.example.arashi.medimgr;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -36,12 +37,14 @@ public class EnterResultActivity extends ActionBarActivity {
 
     private static ParselibAdapter parselibAdapter;
 
-    private String drug_id, drug_ingredient, indications, ch_name = "", apprence_url = "";
+    private String drug_id = "", drug_ingredient = "", indications = "", ch_name = "", apprence_url = "";
     private boolean isDuplicated = false;
     private int drug_total = 0;
     private boolean[] time_take = new boolean[4]; // [0, 1, 2, 3] -> [morning, noon, night, sleep]
 
     private ProgressDialog simpleWaitDialog;
+
+    private Uri drug_uri;
 
     private TextView duplicated_text;
     private ImageView duplicated_img;
@@ -60,7 +63,23 @@ public class EnterResultActivity extends ActionBarActivity {
 
         parselibAdapter = MainActivity.getParseAdapter();
 
-        setDrugDataFromBundle(savedInstanceState);
+        Bundle extras = this.getIntent().getExtras();
+        if (extras != null) {
+            int enter_option = extras.getInt("ENTER_OPTION");
+            switch (enter_option) {
+                case MainActivity.ENTER_HAND:
+                    setDrugDataFromBundle(savedInstanceState);
+                    break;
+                case MainActivity.ENTER_PICTURE:
+                    this.drug_id = String.valueOf(enter_option).toString();
+                    this.ch_name = extras.getString("MEDI_NAME");
+                    this.indications = extras.getString("MEDI_DOSAGE");
+                    this.drug_uri = Uri.parse(extras.getString("PICTURE_URI_STR"));
+                    break;
+                default: break;
+            }
+        }
+
         initView();
     }
 
@@ -100,18 +119,19 @@ public class EnterResultActivity extends ActionBarActivity {
         medi_name.setText(ch_name);
 
         medi_img = (ImageView)findViewById(R.id.medi_img);
-        if (apprence_url.length() != 0) {
+        if (apprence_url.length() != 0)
             new ImageDownloader().execute(apprence_url);
-        }
+        else
+            medi_img.setImageURI(drug_uri);
     }
 
     public void showMediSettings() {
-        medi_count = (EditText)findViewById(R.id.medi_count);
+        medi_count = (EditText) findViewById(R.id.medi_count);
 
-        morning = (ToggleButton)findViewById(R.id.morning);
-        noon = (ToggleButton)findViewById(R.id.noon);
-        night = (ToggleButton)findViewById(R.id.night);
-        sleep = (ToggleButton)findViewById(R.id.sleep);
+        morning = (ToggleButton) findViewById(R.id.morning);
+        noon = (ToggleButton) findViewById(R.id.noon);
+        night = (ToggleButton) findViewById(R.id.night);
+        sleep = (ToggleButton) findViewById(R.id.sleep);
         morning.toggle();
         noon.toggle();
         night.toggle();

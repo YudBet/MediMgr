@@ -14,6 +14,8 @@ import com.parse.Parse;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+    public static final int ENTER_HAND = 0;
+    public static final int ENTER_PICTURE = 1;
 
     private static ParselibAdapter parselibAdapter;
 
